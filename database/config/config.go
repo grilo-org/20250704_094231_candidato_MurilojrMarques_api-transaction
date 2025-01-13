@@ -3,6 +3,8 @@ package config
 import (
 	"database/sql"
 	"fmt"
+
+	_ "github.com/lib/pq"
 )
 
 type postgresDB struct {
@@ -10,7 +12,7 @@ type postgresDB struct {
 }
 
 func NewPostgresDB() (*postgresDB, error) {
-	connectionString := fmt.Sprintf("postgres://%s:%s@$s:%d/$s?sslmode=disable",
+	connectionString := fmt.Sprintf("postgres://%s:%s@%s:%d/%s?sslmode=disable",
 		Env.DbUser, Env.DbPassword, Env.DbServer, Env.DbPort, Env.DbDataBase)
 	db, err := sql.Open("postgres", connectionString)
 	if err != nil {
