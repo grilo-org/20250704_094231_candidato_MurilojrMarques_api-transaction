@@ -6,6 +6,7 @@ CREATE TABLE IF NOT EXISTS transaction(
     value NUMERIC(10, 2) CHECK (VALUE > 0)
 );
 
+
 -- +goose Down
 DROP TABLE IF EXISTS transaction;
 
