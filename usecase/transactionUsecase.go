@@ -6,6 +6,7 @@ import (
 
 	"github.com/MurilojrMarques/api-transaction.git/model"
 	"github.com/MurilojrMarques/api-transaction.git/repository"
+	"github.com/go-playground/validator/v10"
 )
 
 type TransactionUsecase struct {
@@ -19,12 +20,13 @@ func NewTransactionUsecase(repo repository.TransactionRepository) TransactionUse
 }
 
 func (tu *TransactionUsecase) CreateTransaction(transaction model.Transaction) (model.Transaction, error) {
-	if len(transaction.Description) > 50 {
-		return model.Transaction{}, fmt.Errorf("a descrição não pode exceder 50 caracteres")
+	validate := validator.New()
+	if err := validate.Struct(transaction); err != nil {
+		return model.Transaction{}, fmt.Errorf("campo nulo ou valor menor que zero. erro: %v", err)
 	}
 
-	if transaction.Value <= 0 {
-		return model.Transaction{}, fmt.Errorf("o valor da compra deve ser positivo")
+	if len(transaction.Description) > 50 {
+		return model.Transaction{}, fmt.Errorf("a descrição não pode exceder 50 caracteres")
 	}
 
 	transaction.Value = math.Round(transaction.Value*100) / 100
