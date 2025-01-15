@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 	"math"
+	"time"
 
 	"github.com/MurilojrMarques/api-transaction.git/external"
 	"github.com/MurilojrMarques/api-transaction.git/model"
@@ -48,11 +49,15 @@ func (tu *TransactionUsecase) GetTransactionConverted(transactionID int, currenc
 		return model.ConvertedTransaction{}, fmt.Errorf("transação não encontrada: %v", err)
 	}
 
-	exchangeRate, err := external.FetchValidExchangeRate(transaction.Date, currency)
+	dateFormatted := time.Time(transaction.Date).Format("2006-01-02")
+	sixMonthsBack := time.Time(transaction.Date).AddDate(0, -6, 0).Format("2006-01-02")
+
+	exchangeRate, err := external.FetchValidExchangeRate(dateFormatted, sixMonthsBack, currency)
 	if err != nil {
 		return model.ConvertedTransaction{}, fmt.Errorf("erro ao obter taxa de câmbio: %v", err)
 	}
 
+	// Calcular o valor convertido
 	convertedValue := math.Round(transaction.Value*exchangeRate*100) / 100
 
 	return model.ConvertedTransaction{

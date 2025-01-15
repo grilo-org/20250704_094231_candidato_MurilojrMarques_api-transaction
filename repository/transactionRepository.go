@@ -3,6 +3,7 @@ package repository
 import (
 	"database/sql"
 	"fmt"
+	"time"
 
 	"github.com/MurilojrMarques/api-transaction.git/model"
 )
@@ -27,7 +28,7 @@ func (tr *TransactionRepository) CreateTransaction(transaction model.Transaction
 		fmt.Println(err)
 		return 0, err
 	}
-	err = query.QueryRow(transaction.Description, transaction.Date, transaction.Value).Scan(&id)
+	err = query.QueryRow(transaction.Description, time.Time(transaction.Date), transaction.Value).Scan(&id)
 	if err != nil {
 		fmt.Println(err)
 		return 0, err
