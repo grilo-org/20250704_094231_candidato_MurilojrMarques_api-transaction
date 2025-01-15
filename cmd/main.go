@@ -21,6 +21,7 @@ func main() {
 	TransactionController := controller.NewTransactionController(TransactionUsecase)
 
 	server.POST("/transaction", TransactionController.CreateTransaction)
+	server.GET("/transaction/:id/convert", TransactionController.GetTransactionConverted)
 
 	server.Run(":8080")
 }

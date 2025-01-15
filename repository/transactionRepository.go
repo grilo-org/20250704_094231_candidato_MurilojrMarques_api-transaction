@@ -35,3 +35,13 @@ func (tr *TransactionRepository) CreateTransaction(transaction model.Transaction
 	query.Close()
 	return id, nil
 }
+
+func (tr *TransactionRepository) GetTransactionByID(id int) (model.Transaction, error) {
+	var transaction model.Transaction
+	query := "SELECT id, description, date, value FROM transaction WHERE id = $1"
+	err := tr.connection.QueryRow(query, id).Scan(&transaction.ID, &transaction.Description, &transaction.Date, &transaction.Value)
+	if err != nil {
+		return model.Transaction{}, err
+	}
+	return transaction, nil
+}

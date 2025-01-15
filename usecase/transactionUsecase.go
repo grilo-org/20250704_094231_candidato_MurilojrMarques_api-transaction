@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"math"
 
+	"github.com/MurilojrMarques/api-transaction.git/external"
 	"github.com/MurilojrMarques/api-transaction.git/model"
 	"github.com/MurilojrMarques/api-transaction.git/repository"
 	"github.com/go-playground/validator/v10"
@@ -39,4 +40,24 @@ func (tu *TransactionUsecase) CreateTransaction(transaction model.Transaction) (
 	transaction.ID = transactionId
 
 	return transaction, nil
+}
+
+func (tu *TransactionUsecase) GetTransactionConverted(transactionID int, currency string) (model.ConvertedTransaction, error) {
+	transaction, err := tu.repository.GetTransactionByID(transactionID)
+	if err != nil {
+		return model.ConvertedTransaction{}, fmt.Errorf("transação não encontrada: %v", err)
+	}
+
+	exchangeRate, err := external.FetchValidExchangeRate(transaction.Date, currency)
+	if err != nil {
+		return model.ConvertedTransaction{}, fmt.Errorf("erro ao obter taxa de câmbio: %v", err)
+	}
+
+	convertedValue := math.Round(transaction.Value*exchangeRate*100) / 100
+
+	return model.ConvertedTransaction{
+		Transaction:    transaction,
+		ExchangeRate:   exchangeRate,
+		ConvertedValue: convertedValue,
+	}, nil
 }
