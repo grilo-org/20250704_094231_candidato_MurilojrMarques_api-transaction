@@ -13,7 +13,7 @@ func FetchValidExchangeRate(transactionDate time.Time, currency string) (float64
 	sixMonths := transactionDate.AddDate(0, -6, 0).Format("2006-01-02")
 
 	url := fmt.Sprintf(
-		"https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/rates_of_exchange?fields=country_currency_desc,exchange_rate,record_date&filter=country_currency_desc:eq:%s,record_date:gte:%s,record_date:lte:%s&sort=-record_date",
+		"https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/rates_of_exchange?fields=currency,exchange_rate,record_date&filter=currency:eq:%s,record_date:gte:%s,record_date:lte:%s&sort=-record_date",
 		currency, sixMonths, date,
 	)
 	resp, err := http.Get(url)
