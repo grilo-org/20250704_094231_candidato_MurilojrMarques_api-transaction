@@ -15,8 +15,8 @@ type TransactionUsecase struct {
 	repository repository.TransactionRepository
 }
 
-func NewTransactionUsecase(repo repository.TransactionRepository) TransactionUsecase {
-	return TransactionUsecase{
+func NewTransactionUsecase(repo repository.TransactionRepository) *TransactionUsecase {
+	return &TransactionUsecase{
 		repository: repo,
 	}
 }
