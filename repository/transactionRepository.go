@@ -8,17 +8,22 @@ import (
 	"github.com/MurilojrMarques/api-transaction.git/model"
 )
 
-type TransactionRepository struct {
+type TransactionRepository interface {
+	CreateTransaction(transaction model.Transaction) (int, error)
+	GetTransactionByID(id int) (model.Transaction, error)
+}
+
+type TransactionRepositoryImplementation struct {
 	connection *sql.DB
 }
 
 func NewTransactionRepository(connection *sql.DB) TransactionRepository {
-	return TransactionRepository{
+	return &TransactionRepositoryImplementation{
 		connection: connection,
 	}
 }
 
-func (tr *TransactionRepository) CreateTransaction(transaction model.Transaction) (int, error) {
+func (tr *TransactionRepositoryImplementation) CreateTransaction(transaction model.Transaction) (int, error) {
 
 	var id int
 	query, err := tr.connection.Prepare("INSERT INTO transaction" +
@@ -37,7 +42,7 @@ func (tr *TransactionRepository) CreateTransaction(transaction model.Transaction
 	return id, nil
 }
 
-func (tr *TransactionRepository) GetTransactionByID(id int) (model.Transaction, error) {
+func (tr *TransactionRepositoryImplementation) GetTransactionByID(id int) (model.Transaction, error) {
 	var transaction model.Transaction
 	query := "SELECT id, description, date, value FROM transaction WHERE id = $1"
 	err := tr.connection.QueryRow(query, id).Scan(&transaction.ID, &transaction.Description, &transaction.Date, &transaction.Value)
