@@ -22,7 +22,7 @@ func (d *CustomDate) UnmarshalJSON(b []byte) error {
 }
 
 type Transaction struct {
-	ID          int        `json:"id_transaction"`
+	ID          int        `json:"id_transaction,omitempty"`
 	Description string     `json:"description" validate:"required,max=50"`
 	Date        CustomDate `json:"date" validate:"required"`
 	Value       float64    `json:"value" validate:"required,gt=0"`
