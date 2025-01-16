@@ -7,6 +7,10 @@ import (
 	"strconv"
 )
 
+type ExchangeRateFetcher interface {
+	FetchValidExchangeRate(date, sixMonths, currency string) (float64, error)
+}
+
 func FetchValidExchangeRate(date, sixMonths, currency string) (float64, error) {
 	url := fmt.Sprintf(
 		"https://api.fiscaldata.treasury.gov/services/api/fiscal_service/v1/accounting/od/rates_of_exchange?fields=currency,exchange_rate,record_date&filter=currency:eq:%s,record_date:gte:%s,record_date:lte:%s&sort=-record_date",
