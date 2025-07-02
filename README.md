@@ -61,9 +61,7 @@ e rodar o comando substituindo os campos para subir a migration para o banco de 
 
 ## Rodando os testes
 
-Para rodar os testes, entre no link do swagger: 
+Para rodar os testes, rode o comando go run main.go e teste as rotas via postman/insomnia ou entre no link do swagger: 
 
 http://localhost:8080/swagger/index.html
-
-
 
